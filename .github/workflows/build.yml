@@ -6,7 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: unzip -q colorgrade-neoforge-1.21.1.zip -d out
+      - run: unzip -q "$(ls *.zip | head -n 1)" -d out
+      - run: sed -i 's/\$[{][.][.][.][}]/X/g' out/colorgrade-neoforge-1.21.1/src/main/templates/META-INF/neoforge.mods.toml
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -14,7 +15,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 9.2.1
-      - run: gradle build --no-daemon
+      - run: gradle build --no-daemon --console=plain
         working-directory: out/colorgrade-neoforge-1.21.1
       - uses: actions/upload-artifact@v4
         with:
